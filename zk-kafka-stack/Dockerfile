@@ -6,7 +6,7 @@ ENV SW_ZK_GZ=https://www.apache.org/dyn/closer.lua/?action=download&filename=zoo
 
 RUN set -ex; \
   apt-get update; \
-  apt-get -y install procps htop mc tree python3 python3-pip;
+  apt-get -y install procps htop mc net-tools tree python3 python3-pip;
 
 RUN pip3 install bottle glances
 
