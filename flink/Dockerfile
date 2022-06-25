@@ -16,9 +16,24 @@ RUN set -ex; \
   tar -xf /opt/flink.gz -C /opt/flink --strip-components=1; \
   rm /opt/flink.gz;
 
-
 ENV FLINK_HOME=/opt/flink
 ENV PATH=$FLINK_HOME/bin:$PATH
+
+ENV SW_ZK_GZ=https://www.apache.org/dyn/closer.lua/?action=download&filename=zookeeper/zookeeper-3.7.1/apache-zookeeper-3.7.1-bin.tar.gz
+
+RUN set -ex; \
+  echo install zookeeper; \
+  mkdir /opt/zookeeper; \
+  wget -nv -O /opt/zk.gz "$SW_ZK_GZ"; \
+  tar -xf /opt/zk.gz -C /opt/zookeeper --strip-components=1; \
+  rm /opt/zk.gz;
+
+ENV ZOOKEEPER_HOME=/opt/zookeeper
+ENV PATH=$ZOOKEEPER_HOME/bin:$PATH
+
+COPY zk.cfg /opt/zookeeper/conf/zoo.cfg
+EXPOSE 2181
+
 WORKDIR /opt/flink
 COPY flink-entrypoint.sh /opt/flink/
 COPY entrypoint.sh /opt/

@@ -22,6 +22,9 @@ main() {
         cluster)
             run_cluster
             ;;
+        ha-cluster)
+            run_ha_cluster
+            ;;
         *)
         flink_ep
     esac
@@ -29,6 +32,7 @@ main() {
 
 run_glance() {
     if [[ -z "${NO_GLANCE}" ]]; then
+      echo NO GLANCE RUNNING
       return
     fi
     glances -w&
@@ -42,6 +46,25 @@ run_cluster() {
     source /opt/flink-config.sh
     copy_plugins_if_required
     prepare_configuration
+
+    echo Starting standalone Flink Cluster
+    start-cluster.sh
+    run_flink_job
+    do_forever
+}
+
+run_ha_cluster() {
+    source /opt/flink-config.sh
+    copy_plugins_if_required
+    prepare_configuration
+
+    zkServer.sh start
+     
+    set_config_option high-availability zookeeper
+    set_config_option high-availability.zookeeper.quorum localhost:2181
+    set_config_option high-availability.zookeeper.path.root /flink
+    set_config_option high-availability.cluster-id /nefro-cluster
+    set_config_option high-availability.storageDir file:///usr/share/flink/ha/recovery
 
     echo Starting standalone Flink Cluster
     start-cluster.sh

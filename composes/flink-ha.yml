@@ -1,0 +1,25 @@
+version: '2.1'
+services:  
+  flink:
+    hostname: flink-ha
+    image: s7i/flink:ha
+    command: ha-cluster
+    environment:
+      - TASK_MANAGER_NUMBER_OF_TASK_SLOTS=10
+    ports:
+      - 8100:8081
+      - 61208:61208
+      - 2181:2181
+    networks:
+     - dev
+    volumes:
+    - flink-ha:/usr/share/zookeeper
+    - flink-ha:/usr/share/flink
+
+volumes:
+  flink-ha:
+    external: true
+
+networks:
+  dev:    
+    name: ${FLINK_HA_NETWORK:-dev-network}
