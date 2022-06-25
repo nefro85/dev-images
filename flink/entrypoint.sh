@@ -31,8 +31,8 @@ main() {
 }
 
 run_glance() {
-    if [[ -z "${NO_GLANCE}" ]]; then
-      echo NO GLANCE RUNNING
+    if [[ -n "${NO_GLANCE}" ]]; then
+      echo FLAG: NO GLANCE
       return
     fi
     glances -w&
@@ -54,17 +54,26 @@ run_cluster() {
 }
 
 run_ha_cluster() {
+    echo "# clean setup of flink" > "/opt/flink/conf/flink-conf.yaml"
     source /opt/flink-config.sh
+
+    set_config_option jobmanager.rpc.port: 6123
+    set_config_option jobmanager.memory.process.size 1600m
+    set_config_option taskmanager.memory.process.size 1728m
+    set_config_option parallelism.default 1
+    set_config_option jobmanager.execution.failover-strategy region
+
+
     copy_plugins_if_required
     prepare_configuration
 
-    zkServer.sh start
+    zkServer.sh start    
      
     set_config_option high-availability zookeeper
     set_config_option high-availability.zookeeper.quorum localhost:2181
     set_config_option high-availability.zookeeper.path.root /flink
     set_config_option high-availability.cluster-id /nefro-cluster
-    set_config_option high-availability.storageDir file:///usr/share/flink/ha/recovery
+    set_config_option high-availability.storageDir file:///usr/share/flink/ha/recovery    
 
     echo Starting standalone Flink Cluster
     start-cluster.sh
