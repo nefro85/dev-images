@@ -75,7 +75,7 @@ run_cluster() {
     echo Starting standalone Flink Cluster
     start-cluster.sh
     run_flink_job
-    do_forever
+    post_flink_startup
 }
 
 run_ha_cluster() {
@@ -92,7 +92,7 @@ run_ha_cluster() {
     echo Starting HA Flink Cluster...
     start-cluster.sh
     run_flink_job
-    do_forever
+    post_flink_startup
 }
 
 run_flink_job() {
@@ -100,14 +100,19 @@ run_flink_job() {
       return
     fi
     echo "Running Flink's job..."
-    flink run -d "$FLINK_RUN_JOB"
+    flink run -d ${FLINK_RUN_JOB}
 }
 
 show_logs() {
     tail -n 1000 -f /opt/flink/log/*
 }
 
-do_forever() {
+post_flink_startup() {
+    if [[ -n "${SCRIPT}" ]]; then
+      echo Running Script...
+      eval ${SCRIPT}
+    fi
+
     if [[ -n "${NO_FLINK_LOGS}" ]]; then
       sleep_forever
     else
