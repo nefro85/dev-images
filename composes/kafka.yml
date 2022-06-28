@@ -19,6 +19,7 @@ services:
     volumes:
      - kbroker:/data
      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
 
   kafdrop:
     image: obsidiandynamics/kafdrop
@@ -30,17 +31,20 @@ services:
      - dev
     environment:
       KAFKA_BROKERCONNECT: kafka:9093
-      JVM_OPTS: -Xms32M -Xmx64M
+      JVM_OPTS: -Xms32M -Xmx64M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify
       SERVER_SERVLET_CONTEXTPATH: /
 
-  repand:
-    image: docker.redpanda.com/vectorized/console:master-0a8fce8
+  kowl:
+    image: quay.io/cloudhut/kowl
     environment:
      - KAFKA_BROKERS=kafka:9093
     ports:
      - :8080
     networks:
      - dev
+    depends_on:
+     - kafka
+    restart: unless-stopped
 
 volumes:
   kbroker:
@@ -48,4 +52,4 @@ volumes:
 
 networks:
   dev:    
-    name: dev-network
+    name: ${KAFKA_NETWORK:-dev-network}
