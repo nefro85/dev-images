@@ -1,8 +1,7 @@
 version: '2.1'
 services:  
   kafka:
-    hostname: kafka
-    image: s7i/zk-kafka-stack:0.1
+    build: ../zk-kafka-stack/
     environment:
       - |
         KAFKA_SERVER_PROPERTIES=
@@ -12,9 +11,9 @@ services:
         inter.broker.listener.name=kafka_lo
 
     ports:
-      - 61208:61208
-      - 9092:9092
-      - 2181:2181
+      - :61208
+      - :9092
+      - :2181
     networks:
      - dev
     volumes:
@@ -23,7 +22,7 @@ services:
   kafdrop:
     image: obsidiandynamics/kafdrop
     ports:
-     - "9000:9000"
+     - ":9000"
     depends_on:
      - kafka
     networks:
@@ -32,6 +31,15 @@ services:
       KAFKA_BROKERCONNECT: kafka:9093
       JVM_OPTS: -Xms32M -Xmx64M
       SERVER_SERVLET_CONTEXTPATH: /
+
+  repand:
+    image: docker.redpanda.com/vectorized/console:master-0a8fce8
+    environment:
+     - KAFKA_BROKERS=kafka:9093
+    ports:
+     - :8080
+    networks:
+     - dev
 
 networks:
   dev:    
