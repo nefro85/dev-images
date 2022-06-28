@@ -1,4 +1,4 @@
-broker.id={{ default .Env.KAFKA_BROKER_ID "123" }}
+broker.id=${KAFKA_BROKER_ID}
 
 num.network.threads=3
 num.io.threads=8
@@ -7,7 +7,7 @@ socket.send.buffer.bytes=102400
 socket.receive.buffer.bytes=102400
 socket.request.max.bytes=104857600
 
-log.dirs=/data/kafka/kafka-logs
+log.dirs=${KAFKA_LOG_DIR}
 
 num.partitions=1
 num.recovery.threads.per.data.dir=1
@@ -19,8 +19,9 @@ transaction.state.log.min.isr=1
 log.retention.hours=168
 log.segment.bytes=1073741824
 log.retention.check.interval.ms=300000
-zookeeper.connect=localhost:2181
+zookeeper.connect=${KAFKA_ZOOKEEPER}
 zookeeper.connection.timeout.ms=18000
 
 group.initial.rebalance.delay.ms=0
-{{ default .Env.KAFKA_SERVER_PROPERTIES "" }}
+
+${KAFKA_SERVER_PROPERTIES}

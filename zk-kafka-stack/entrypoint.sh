@@ -1,24 +1,36 @@
 #!/bin/bash -e
 set -e
 
-KAFKA_CFG=/opt/kafka-server.properties
+info() {
+    echo Kafka Stack Container
+    echo
+    echo BROKER_ID ${KAFKA_BROKER_ID}
+    echo KAFKA_LOG_DIR ${KAFKA_LOG_DIR}
+    echo KAFKA_ZOOKEEPER ${KAFKA_ZOOKEEPER}
+    echo KAFKA_SERVER_PROPERTIES:
+    echo ${KAFKA_SERVER_PROPERTIES}
+}
 
-echo Init Dev Stack Container
+run_main() {
+    info
+    
+    echo Running Glances...
+    glances -w&
 
-echo Running ZooKeeper server
-cd /opt/zookeeper
+    echo Running ZooKeeper server
+    envsubst < /opt/zoo.tmpl > ${ZOO_CFG}
 
-./bin/zkServer.sh start
+    /opt/zookeeper/bin/zkServer.sh start
 
-dockerize -wait tcp://localhost:2181
+    run_kafka
+}
 
-cd /opt
+run_kafka() {
 
-echo Running Kafka
+    echo Running Kafka
+    envsubst < /opt/kafka-server.tmpl > ${KAFKA_CFG}
 
-dockerize -template /opt/kafka-server.tmpl:$KAFKA_CFG
-/opt/kafka/bin/kafka-server-start.sh -daemon $KAFKA_CFG
+    exec /opt/kafka/bin/kafka-server-start.sh ${KAFKA_CFG}
 
-glances -w&
-
-dockerize -wait file:///opt/kafka/logs/server.log -stdout /opt/kafka/logs/server.log
+}
+run_main

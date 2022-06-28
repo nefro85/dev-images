@@ -6,4 +6,5 @@
 *.yaml          text eol=crlf
 *.yml           text eol=crlf
 *.sh            text eol=lf
+*.tmpl          text eol=lf
 
