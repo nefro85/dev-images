@@ -7,10 +7,12 @@ RUN set -ex; \
   pip3 install bottle glances;
 
 ARG ZK_VERSION=3.7.1
-ARG KAFKA_VERSION=2.8.0
+ARG KAFKA_VERSION=3.2.0
+ARG KAFKA_SCALA_VERSION=2.13
 
 ENV SW_ZK_GZ=https://www.apache.org/dyn/closer.lua/?action=download&filename=zookeeper/zookeeper-${ZK_VERSION}/apache-zookeeper-${ZK_VERSION}-bin.tar.gz \
-    SW_KAFKA_GZ=https://www.apache.org/dyn/closer.cgi?action=download&path=/kafka/${KAFKA_VERSION}/kafka_2.12-${KAFKA_VERSION}.tgz
+    SW_KAFKA_GZ=https://www.apache.org/dyn/closer.cgi?action=download&path=/kafka/${KAFKA_VERSION}/kafka_${KAFKA_SCALA_VERSION}-${KAFKA_VERSION}.tgz
+
 
 RUN set -ex; \
   echo install zookeeper; \
