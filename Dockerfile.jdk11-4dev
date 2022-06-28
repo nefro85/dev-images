@@ -1,0 +1,7 @@
+FROM openjdk:11-jdk
+
+RUN set -ex; \
+  apt-get update; \
+  apt-get -y install procps htop mc net-tools tree python3 python3-pip jq bash-completion; \
+  apt-get -y install gettext-base libsnappy1v5 libjemalloc-dev;
+
