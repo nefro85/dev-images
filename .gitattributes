@@ -7,4 +7,5 @@
 *.yml           text eol=crlf
 *.sh            text eol=lf
 *.tmpl          text eol=lf
+*.properties    text eol=lf
 

@@ -28,9 +28,17 @@ run_main() {
 run_kafka() {
 
     echo Running Kafka
+    add_default_config
     envsubst < /opt/kafka-server.tmpl > ${KAFKA_CFG}
 
     exec /opt/kafka/bin/kafka-server-start.sh ${KAFKA_CFG}
 
 }
+
+add_default_config() {
+    if [[ -z "${KAFKA_SERVER_PROPERTIES}" ]]; then
+      export KAFKA_SERVER_PROPERTIES=$(cat /opt/default.properites)
+    fi
+}
+
 run_main

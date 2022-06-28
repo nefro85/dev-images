@@ -1,0 +1,4 @@
+advertised.listeners=CON://:9093, kafka_lo://localhost:9092
+listeners=CON://0.0.0.0:9093, kafka_lo://0.0.0.0:9092        
+listener.security.protocol.map=CON:PLAINTEXT,kafka_lo:PLAINTEXT
+inter.broker.listener.name=kafka_lo
