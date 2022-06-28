@@ -2,14 +2,6 @@ version: '2.1'
 services:  
   kafka:
     build: ../zk-kafka-stack/
-    environment:
-      - |
-        KAFKA_SERVER_PROPERTIES=
-        advertised.listeners=DC://:9093, kafka_lo://localhost:9092
-        listeners=DC://0.0.0.0:9093, kafka_lo://0.0.0.0:9092        
-        listener.security.protocol.map=DC:PLAINTEXT,kafka_lo:PLAINTEXT
-        inter.broker.listener.name=kafka_lo
-
     ports:
       - :61208
       - :9092
