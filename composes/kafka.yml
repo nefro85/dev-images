@@ -17,7 +17,8 @@ services:
     networks:
      - dev
     volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
+     - kbroker:/data
+     - /var/run/docker.sock:/var/run/docker.sock
 
   kafdrop:
     image: obsidiandynamics/kafdrop
@@ -40,6 +41,10 @@ services:
      - :8080
     networks:
      - dev
+
+volumes:
+  kbroker:
+    driver: local
 
 networks:
   dev:    

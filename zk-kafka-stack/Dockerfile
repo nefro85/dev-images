@@ -1,14 +1,18 @@
 FROM openjdk:8-jre
 
 
-ENV SW_ZK_GZ=https://www.apache.org/dyn/closer.lua/?action=download&filename=zookeeper/zookeeper-3.7.0/apache-zookeeper-3.7.0-bin.tar.gz \
-    SW_KAFKA_GZ=https://www.apache.org/dyn/closer.cgi?action=download&path=/kafka/2.8.0/kafka_2.12-2.8.0.tgz
+ARG ZK_VERSION=3.7.1
+ARG KAFKA_VERSION=2.8.0
+ARG DOCKERIZE_VERSION=v0.6.1
+
+ENV SW_ZK_GZ=https://www.apache.org/dyn/closer.lua/?action=download&filename=zookeeper/zookeeper-${ZK_VERSION}/apache-zookeeper-${ZK_VERSION}-bin.tar.gz \
+    SW_KAFKA_GZ=https://www.apache.org/dyn/closer.cgi?action=download&path=/kafka/${KAFKA_VERSION}/kafka_2.12-${KAFKA_VERSION}.tgz
 
 RUN set -ex; \
   apt-get update; \
-  apt-get -y install procps htop mc net-tools tree python3 python3-pip;
-
-RUN pip3 install bottle glances
+  apt-get -y install procps htop mc net-tools tree python3 python3-pip; \
+  rm -rf /var/lib/apt/lists/*; \
+  pip3 install bottle glances;
 
 RUN set -ex; \
   echo install zookeeper; \
@@ -25,7 +29,6 @@ RUN set -ex; \
   rm /opt/kafka.gz;
 
 # https://github.com/jwilder/dockerize/
-ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
@@ -36,6 +39,7 @@ COPY kafka-server.tmpl kafka-server.tmpl
 COPY entrypoint.sh entrypoint.sh
 
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
+VOLUME [ "/data/kafka/kafka-logs", "/data/zookeeper/dataDir" ]
 
 EXPOSE 2181
 EXPOSE 9092
