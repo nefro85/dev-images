@@ -11,3 +11,5 @@ Image options:
 - `flink`
 - `jdk11`
 
+### Useful links:
+- https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
