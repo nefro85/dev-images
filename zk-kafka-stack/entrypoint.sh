@@ -13,26 +13,32 @@ info() {
 
 run_main() {
     info
-    
+    run_glance
+
+    run_zoo
+    # we have to wait
+    sleep 20
+    run_kafka
+}
+
+run_glance() {
     echo Running Glances...
     glances -w&
+}
 
+run_zoo() {
     echo Running ZooKeeper server
     envsubst < /opt/zoo.tmpl > ${ZOO_CFG}
 
     /opt/zookeeper/bin/zkServer.sh start
-
-    run_kafka
 }
 
 run_kafka() {
-
-    echo Running Kafka
+    echo Running Kafka...
     add_default_config
     envsubst < /opt/kafka-server.tmpl > ${KAFKA_CFG}
 
     exec /opt/kafka/bin/kafka-server-start.sh ${KAFKA_CFG}
-
 }
 
 add_default_config() {
