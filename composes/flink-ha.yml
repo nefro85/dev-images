@@ -2,7 +2,7 @@ version: '2.1'
 services:  
   flink:
     hostname: flink-ha
-    image: s7i/flink:ha
+    image: s7i/flink
     command: ha-cluster
     environment:
       - TASK_MANAGER_NUMBER_OF_TASK_SLOTS=10
