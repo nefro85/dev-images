@@ -1,13 +1,16 @@
 FROM openjdk:11-jre
 
-ENV SW_FLINK_GZ=https://www.apache.org/dyn/closer.cgi?action=download&filename=flink/flink-1.14.4/flink-1.14.4-bin-scala_2.12.tgz
-
 RUN set -ex; \
   apt-get update; \
   apt-get -y install procps htop mc net-tools tree python3 python3-pip; \
   apt-get -y install gettext-base libsnappy1v5 libjemalloc-dev;
 
 RUN pip3 install bottle glances
+
+ARG FLINK_VERSION=1.14.4
+ARG FLINK_SCALA_VERSION=2.12
+
+ENV SW_FLINK_GZ=https://www.apache.org/dyn/closer.cgi?action=download&filename=flink/flink-${FLINK_VERSION}/flink-${FLINK_VERSION}-bin-scala_${FLINK_SCALA_VERSION}.tgz
 
 RUN set -ex; \
   echo install flink; \
@@ -19,7 +22,9 @@ RUN set -ex; \
 ENV FLINK_HOME=/opt/flink
 ENV PATH=$FLINK_HOME/bin:$PATH
 
-ENV SW_ZK_GZ=https://www.apache.org/dyn/closer.lua/?action=download&filename=zookeeper/zookeeper-3.7.1/apache-zookeeper-3.7.1-bin.tar.gz
+ARG ZOOKEEPER_VERSION=3.7.1
+
+ENV SW_ZK_GZ=https://www.apache.org/dyn/closer.lua/?action=download&filename=zookeeper/zookeeper-${ZOOKEEPER_VERSION}/apache-zookeeper-${ZOOKEEPER_VERSION}-bin.tar.gz
 
 RUN set -ex; \
   echo install zookeeper; \
