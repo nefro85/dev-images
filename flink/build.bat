@@ -1,2 +1,2 @@
 @echo on
-docker build -t s7i/flink:ha -t s7i/flink:latest .
+docker build --build-arg FLINK_VERSION=1.15.1 -t s7i/flink:1.15.1 .
