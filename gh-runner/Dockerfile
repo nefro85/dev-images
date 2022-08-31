@@ -21,8 +21,9 @@ RUN set -ex; \
   rm ./actions-runner-linux-x64.tar.gz;
 
 ENV RUNNER_ALLOW_RUNASROOT="scary me" \
-    GH_REPO_URL= \
-    GH_TOKEN=
+    GH_OWNER= \
+    GH_REPOSITORY= \
+    GH_PAT=
 
 COPY entrypoint.sh /opt/entrypoint.sh
 ENTRYPOINT [ "sh", "/opt/entrypoint.sh" ]
