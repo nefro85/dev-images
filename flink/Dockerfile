@@ -1,9 +1,13 @@
-FROM openjdk:11-jre
+FROM ubuntu:latest
 
 RUN set -ex; \
   apt-get update; \
-  apt-get -y install procps htop mc net-tools tree python3 python3-pip; \
-  apt-get -y install gettext-base libsnappy1v5 libjemalloc-dev;
+  apt-get -y install wget curl git procps htop mc net-tools tree python3 python3-pip jq bash-completion; \
+  apt-get -y nano vim; \
+  apt-get -y install gettext-base libsnappy1v5 libjemalloc-dev; \
+  apt-get -y install openjdk-11-jdk; \
+  pip3 install bottle glances; \
+  rm -rf /var/lib/apt/lists/*;
 
 RUN pip3 install bottle glances
 
