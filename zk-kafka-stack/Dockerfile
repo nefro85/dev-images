@@ -31,7 +31,7 @@ WORKDIR /opt
 
 ENV KAFKA_BROKER_ID=123 \
     KAFKA_LOG_DIR=/data/kafka/kafka-logs \
-    KAFKA_ZOOKEEPER=localhost:2181 \
+    KAFKA_ZOOKEEPER=localhost:2181/kafka \
     KAFKA_SERVER_PROPERTIES= \
     ZOOKEEPER_DATA=/data/zookeeper/dataDir \
     ZOOKEEPER_TICK_TIME=2000 \
