@@ -46,7 +46,7 @@ run_glance() {
 }
 
 flink_ep() {
-    exec /opt/flink/flink-entrypoint.sh "${args[@]}"
+    exec /opt/flink-entrypoint.sh "${args[@]}"
 }
 
 prepare_flink() {
