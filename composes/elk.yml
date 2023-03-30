@@ -1,0 +1,77 @@
+# docker-compose -p elk -f elk.yml up -d
+
+version: '2.2'
+
+volumes:
+  data01:
+    driver: local
+
+networks:
+  elastic:
+    driver: bridge
+
+services:
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.2
+    container_name: es01
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+
+  kib01:
+    image: docker.elastic.co/kibana/kibana:8.6.2
+    container_name: kib01
+    ports:
+      - 5601:5601
+    environment:      
+      ELASTICSEARCH_URL: http://es01:9200
+      ELASTICSEARCH_HOSTS: http://es01:9200
+    networks:
+      - elastic
+
+  logstash:
+    scale: 0
+    image: docker.elastic.co/logstash/logstash:7.15.0
+    volumes:
+      - type: bind
+        source: ./logstash/logstash.yml
+        target: /usr/share/logstash/config/logstash.yml
+        read_only: true
+      - type: bind
+        source: ./logstash/pipeline
+        target: /usr/share/logstash/pipeline
+        read_only: true
+    ports:
+      - "5044:5044"
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elastic
+
+  filebeat:
+    scale: 0
+    image: bargenson/filebeat:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    environment:
+      - LOGSTASH_HOST=logstash
+      - LOGSTASH_PORT=5044
+      - SHIPPER_NAME=fb01
+    networks:
+     - elastic
