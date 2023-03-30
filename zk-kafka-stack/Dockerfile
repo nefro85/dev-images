@@ -1,4 +1,4 @@
-FROM openjdk:8-jre
+FROM eclipse-temurin:11
 
 RUN set -ex; \
   apt-get update; \
@@ -31,6 +31,7 @@ WORKDIR /opt
 
 ENV KAFKA_BROKER_ID=123 \
     KAFKA_LOG_DIR=/data/kafka/kafka-logs \
+    KAFKA_HOME=/opt/kafka \
     KAFKA_ZOOKEEPER=localhost:2181/kafka \
     KAFKA_SERVER_PROPERTIES= \
     ZOOKEEPER_DATA=/data/zookeeper/dataDir \
