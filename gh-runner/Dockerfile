@@ -14,7 +14,7 @@ RUN set -ex; \
 WORKDIR /opt/actions-runner
 
 
-ARG GH_ACTION_GZ_URL=https://github.com/actions/runner/releases/download/v2.296.0/actions-runner-linux-x64-2.296.0.tar.gz
+ARG GH_ACTION_GZ_URL=https://github.com/actions/runner/releases/download/v2.303.0/actions-runner-linux-arm-2.303.0.tar.gz
 RUN set -ex; \
   wget -nv -O ./actions-runner-linux-x64.tar.gz "$GH_ACTION_GZ_URL"; \
   tar xzf ./actions-runner-linux-x64.tar.gz; \
