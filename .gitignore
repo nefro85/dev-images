@@ -1,3 +1,5 @@
+.vscode/
+.metals/
 #local-scripts
 **/local-*.sh
 

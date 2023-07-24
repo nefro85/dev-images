@@ -1,0 +1,29 @@
+
+# docker-compose -p postgres -f .\composes\postgres.yml up -d
+volumes:
+  pgdata:
+    driver: local
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PW:-postgres123}
+      - POSTGRES_DB=${POSTGRES_DB:-mydb}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL:-pgadmin@noop.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW:-admin123}
+    ports:
+      - "5050:80"
+    restart: unless-stopped
