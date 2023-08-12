@@ -1,0 +1,33 @@
+# docker-compose -p mariadb -f ./mariadb.yml up -d
+
+networks:
+  dev:
+    external: true
+    name: ${NETWORK:-dev-network}
+
+volumes:
+  data:
+    driver: local
+
+services:
+  proxy:
+    build: ./nginx-proxy
+    networks:
+     - dev
+    ports:
+      - "80:80"
+  db:
+    image: mariadb
+    networks:
+     - dev
+    volumes:
+     - "data:/var/lib/mysql"
+    environment:
+      MARIADB_ROOT_PASSWORD: pwd321
+
+  adminer:
+    image: adminer
+    networks:
+     - dev
+    # ports:
+    #   - 8080:8080
