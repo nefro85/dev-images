@@ -82,6 +82,7 @@ init_log_dir() {
 start_kraft_kafka() {
     run_glance
     exec_script&
+    run_kafdrop&
 
     envsubst < /opt/kraft-server.tmpl > ${KAFKA_CFG}
 
@@ -89,6 +90,13 @@ start_kraft_kafka() {
     init_log_dir
 
     ${KAFKA_HOME}/bin/kafka-server-start.sh ${KAFKA_CFG}
+}
+
+run_kafdrop() {
+    java --add-opens=java.base/sun.nio.ch=ALL-UNNAMED \
+    -Dserver.port=7000 -Dmanagement.server.port=7000 ${KAFDROP_JVM_OPTS}\
+    -jar /opt/kafdrop/kafdrop.jar \
+    --kafka.brokerConnect=localhost:9092 ${KAFDROP_ARGS}
 }
 
 case ${args[0]} in
