@@ -80,11 +80,9 @@ init_log_dir() {
 }
 
 start_kraft_kafka() {
-    info
     run_glance
     exec_script&
 
-    add_default_config
     envsubst < /opt/kraft-server.tmpl > ${KAFKA_CFG}
 
     echo "Starting Kafka (Kraft) with configuration: ${KAFKA_CFG}"
