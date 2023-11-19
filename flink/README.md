@@ -1,3 +1,8 @@
+
+Motivation: Single container with flink cluster.
+
+
+
 ### Docker
 ```
 docker build . -t s7i/flink

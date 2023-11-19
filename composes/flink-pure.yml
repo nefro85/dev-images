@@ -1,0 +1,27 @@
+#  docker-compose -f flink-pure.yml -p flk18-pure up -d
+version: '3'
+networks:
+  dev:    
+    name: ${FLINK_HA_NETWORK:-dev-network}
+    external: true
+    
+services:  
+  flink:    
+    image: flink:latest
+    entrypoint: 
+      - sh
+      - -c
+      - start-cluster.sh; tail -f /opt/flink/log/*
+    # environment:
+    #   - |
+    #     FLINK_PROPERTIES=
+    #     classloader.resolve-order: parent-first
+    #     taskmanager.numberOfTaskSlots: 5
+    #     parallelism.default: 2
+    #     rest.flamegraph.enabled: true
+    #     env.java.opts.jobmanager: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+    #     env.java.opts.taskmanager: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006"
+    ports:
+      - 8100:8081
+    networks:
+     - dev

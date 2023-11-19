@@ -3,7 +3,7 @@ FROM ubuntu:latest
 RUN set -ex; \
   apt-get update; \
   apt-get -y install wget curl git procps htop mc net-tools tree python3 python3-pip jq bash-completion; \
-  apt-get -y nano vim; \
+  apt-get -y install nano vim; \
   apt-get -y install gettext-base libsnappy1v5 libjemalloc-dev; \
   apt-get -y install openjdk-11-jdk; \
   pip3 install bottle glances; \
@@ -11,7 +11,7 @@ RUN set -ex; \
 
 RUN pip3 install bottle glances
 
-ARG FLINK_VERSION=1.14.4
+ARG FLINK_VERSION=1.18.0
 ARG FLINK_SCALA_VERSION=2.12
 
 ENV SW_FLINK_GZ=https://www.apache.org/dyn/closer.cgi?action=download&filename=flink/flink-${FLINK_VERSION}/flink-${FLINK_VERSION}-bin-scala_${FLINK_SCALA_VERSION}.tgz
