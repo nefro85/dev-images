@@ -1,8 +1,20 @@
 
 ZK_SVR=${1:-"127.0.0.1:2181"}
 
-echo "ZOOKEEPER SERVER: ${ZK_SVR}"
+cat <<EOF
+ZOOKEEPER SERVER: ${ZK_SVR}
+HELIX VERSION: ${VERSION}
 
-java ${JVM_OPTS} -cp /opt/helix/rest.jar org.apache.helix.rest.server.HelixRestMain --zkSvr ${ZK_SVR} &
+EOF
 
-node /opt/helix/frontend/server/app.js
+restapi=./helix-rest-${VERSION}
+frontend=./helix-front-${VERSION}
+frontendCfg=$frontend/dist/server/config.js
+
+sed -i 's/exports\.PROXY_URL = '\''www\.example\.com'\'';/exports\.PROXY_URL = undefined;/' $frontendCfg
+
+echo "Frontend Config:"
+cat $frontendCfg
+
+$restapi/bin/run-rest-admin.sh --zkSvr ${ZK_SVR} &
+$frontend/bin/start-helix-ui.sh
