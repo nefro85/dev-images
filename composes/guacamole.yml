@@ -1,0 +1,49 @@
+
+networks:
+  dev:
+    external: true
+    name: ${NETWORK:-dev-network}
+volumes:
+  data:
+    driver: local
+
+services:
+  guacd:
+    image: guacamole/guacd
+    networks:
+     - dev
+# docker-compose -p guac -f ./guacamole.yml up guac-init
+  # guac-init:
+  #   image: guacamole/guacamole
+  #   command:
+  #     - sh
+  #     - -c
+  #     - /opt/guacamole/bin/initdb.sh --postgresql > /data/initdb.sql
+  #   volumes:
+  #     - "./guacdata:/data"
+  guacui:
+    image: guacamole/guacamole
+    environment:
+      - GUACD_HOSTNAME=guacd
+      - GUACD_PORT=4822
+      - POSTGRESQL_HOSTNAME=postgres
+      - POSTGRESQL_DATABASE=guacamole
+      - POSTGRESQL_USER=guacamole
+      - POSTGRESQL_PASSWORD=guacamoleS3cr3t
+    networks:
+      - dev
+    ports:
+      - "8000-8100:8080"
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=guacamole
+      - POSTGRES_PASSWORD=guacamoleS3cr3t
+      - POSTGRES_DB=guacamole
+    volumes:
+      - data:/var/lib/postgresql/data
+      # - "./guacdata/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql:ro"
+    networks:
+      - dev
+
+
