@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  caddy:
+    image: caddy:latest
+    ports:
+      - 8080:80
+      - 2019:2019
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - ./grafana.ini:/etc/grafana/grafana.ini:ro
+  auth:
+    image: s7i/fido-web
+    environment:
+      - CERTSTORE_SECRET=ch@nge1t
+      - CERT_PATH=jwtcertstore.jks
+      - NETTY_LOG=WARN
+      - ORIGIN=http://localhost:8080
+      - CONTEXT_ROOT=/auth/
+    # ports:
+    #   - 5005:5005
+    #   - 8443:8443

@@ -81,15 +81,21 @@ init_log_dir() {
 
 start_kraft_kafka() {
     run_glance
-    exec_script&
-    run_kafdrop&
 
     envsubst < /opt/kraft-server.tmpl > ${KAFKA_CFG}
 
     echo "Starting Kafka (Kraft) with configuration: ${KAFKA_CFG}"
     init_log_dir
 
-    ${KAFKA_HOME}/bin/kafka-server-start.sh ${KAFKA_CFG}
+    post_kafka_run_steps &
+    ${KAFKA_HOME}/bin/kafka-server-start.sh ${KAFKA_CFG}    
+
+}
+
+post_kafka_run_steps() {
+    sleep 3
+    exec_script&
+    run_kafdrop&
 }
 
 run_kafdrop() {
