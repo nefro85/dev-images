@@ -1,0 +1,18 @@
+{
+	servers {
+		metrics
+	}
+	admin :2019
+}
+
+:80 {
+	log {
+		level DEBUG
+		format json
+		output stdout
+	}
+
+	handle / {
+		respond "Lab Homepage"
+	}
+}
