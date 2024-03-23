@@ -9,7 +9,12 @@
 	log {
 		level DEBUG
 		format json
-		output stdout
+		#output stdout
+		output file /data/log/access.log {
+			roll_size 10mb
+			roll_keep 5
+			roll_keep_for 720h
+		}
 	}
 
 	handle / {
