@@ -44,9 +44,10 @@ COPY zk.cfg /opt/zookeeper/conf/zoo.cfg
 EXPOSE 2181
 
 WORKDIR /opt/flink
-COPY flink-entrypoint.sh /opt/flink/
-COPY entrypoint.sh /opt/
-COPY flink-config.sh /opt/
+COPY . /opt/
+RUN ln -s /opt/gosu-bypass.sh /usr/bin/gosu
+ADD https://raw.githubusercontent.com/apache/flink-docker/master/1.14/scala_2.12-java11-debian/docker-entrypoint.sh /opt/flink-entrypoint.sh
+RUN chmod +x /opt/flink-entrypoint.sh
 
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
 
