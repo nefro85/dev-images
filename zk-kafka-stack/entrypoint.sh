@@ -8,40 +8,13 @@ info() {
     echo
     echo BROKER_ID ${KAFKA_BROKER_ID}
     echo KAFKA_LOG_DIR ${KAFKA_LOG_DIR}
-    echo KAFKA_ZOOKEEPER ${KAFKA_ZOOKEEPER}
     echo KAFKA_SERVER_PROPERTIES:
     echo ${KAFKA_SERVER_PROPERTIES}
-}
-
-run_main() {
-    info
-    run_glance
-
-    run_zoo
-    # we have to wait
-    sleep 20
-    exec_script&
-    run_kafka
 }
 
 run_glance() {
     echo Running Glances...
     glances -w&
-}
-
-run_zoo() {
-    echo Running ZooKeeper server
-    envsubst < /opt/zoo.tmpl > ${ZOO_CFG}
-
-    /opt/zookeeper/bin/zkServer.sh start
-}
-
-run_kafka() {
-    echo Running Kafka...
-    add_default_config
-    envsubst < /opt/kafka-server.tmpl > ${KAFKA_CFG}
-
-    exec /opt/kafka/bin/kafka-server-start.sh ${KAFKA_CFG}
 }
 
 add_default_config() {
@@ -81,22 +54,25 @@ init_log_dir() {
 
 start_kraft_kafka() {
     info
-    run_glance
-    exec_script&
+    #run_glance
+    #exec_script&
 
-    add_default_config
+    #add_default_config
     envsubst < /opt/kraft-server.tmpl > ${KAFKA_CFG}
 
     echo "Starting Kafka (Kraft) with configuration: ${KAFKA_CFG}"
+    cat ${KAFKA_CFG}
     init_log_dir
 
     ${KAFKA_HOME}/bin/kafka-server-start.sh ${KAFKA_CFG}
 }
 
-case ${args[0]} in
-  kraft)
-    start_kraft_kafka "${args[@]:1}"
-    ;;
-  *)
-  run_main "${args[@]:1}"
-esac
+# case ${args[0]} in
+#   kraft)
+#     start_kraft_kafka "${args[@]:1}"
+#     ;;
+#   *)
+#   run_main "${args[@]:1}"
+# esac
+
+start_kraft_kafka
