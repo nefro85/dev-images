@@ -6,10 +6,8 @@ RUN set -ex; \
   apt-get -y install nano vim; \
   apt-get -y install gettext-base libsnappy1v5 libjemalloc-dev; \
   apt-get -y install openjdk-11-jdk; \
-  pip3 install bottle glances; \
   rm -rf /var/lib/apt/lists/*;
 
-RUN pip3 install bottle glances
 
 ARG FLINK_VERSION=1.18.0
 ARG FLINK_SCALA_VERSION=2.12
@@ -47,10 +45,9 @@ WORKDIR /opt/flink
 COPY flink-entrypoint.sh /opt/flink/
 COPY entrypoint.sh /opt/
 COPY flink-config.sh /opt/
+RUN chmod +x /opt/entrypoint.sh
 
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
 
 
 EXPOSE 8081 6123
-# glances UI
-EXPOSE 61208

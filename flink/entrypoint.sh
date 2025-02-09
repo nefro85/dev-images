@@ -23,8 +23,6 @@ info() {
 
 main() {
     info
-    run_glance
-
     case $1 in
         cluster)
             run_cluster
@@ -37,13 +35,6 @@ main() {
     esac
 }
 
-run_glance() {
-    if [[ -n "${NO_GLANCE}" ]]; then
-      echo FLAG: NO GLANCE
-      return
-    fi
-    glances -w&
-}
 
 flink_ep() {
     exec /opt/flink/flink-entrypoint.sh "${args[@]}"
